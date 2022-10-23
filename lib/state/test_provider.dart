@@ -1,11 +1,8 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class MainProvider extends ChangeNotifier {
-  bool isSplash = true;
-  String test = 'asdfdsf';
-
-  Future<void> _initialization() async {
+class TestProvider extends ChangeNotifier {
+  Future<void> showPushAlarm() async {
     FlutterLocalNotificationsPlugin _localNotification =
         FlutterLocalNotificationsPlugin();
     AndroidInitializationSettings initSettingsAndroid =
@@ -23,13 +20,5 @@ class MainProvider extends ChangeNotifier {
     await _localNotification.initialize(
       initSettings,
     );
-  }
-
-  void delayedSplash() {
-    _initialization();
-    Future.delayed(const Duration(milliseconds: 2000), () {
-      isSplash = false;
-      notifyListeners();
-    });
   }
 }
