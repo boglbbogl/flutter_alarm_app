@@ -17,9 +17,21 @@ class TestCase extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _button(onTap: () {}, title: '즉시 전송(일회성)'),
-                  _button(onTap: () {}, title: '특정 날짜/시간대 전송'),
-                  _button(onTap: () {}, title: '매일 전송'),
+                  _button(
+                      onTap: () {
+                        value.showPushAlarm();
+                      },
+                      title: '즉시 전송(일회성)'),
+                  _button(
+                      onTap: () {
+                        value.selectedDatePushAlarm();
+                      },
+                      title: '특정 날짜/시간대 전송'),
+                  _button(
+                      onTap: () {
+                        value.loopPushAlarm();
+                      },
+                      title: '매일 전송'),
                   _button(onTap: () {}, title: '주/월간 정송'),
                   _button(onTap: () {}, title: '전송 취소'),
                 ],

@@ -5,7 +5,7 @@ class MainProvider extends ChangeNotifier {
   bool isSplash = true;
   String test = 'asdfdsf';
 
-  Future<void> _initialization() async {
+  Future<void> _initLocalNotification() async {
     FlutterLocalNotificationsPlugin _localNotification =
         FlutterLocalNotificationsPlugin();
     AndroidInitializationSettings initSettingsAndroid =
@@ -26,7 +26,7 @@ class MainProvider extends ChangeNotifier {
   }
 
   void delayedSplash() {
-    _initialization();
+    _initLocalNotification();
     Future.delayed(const Duration(milliseconds: 2000), () {
       isSplash = false;
       notifyListeners();
