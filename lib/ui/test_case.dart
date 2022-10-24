@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_app/state/test_provider.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 
 class TestCase extends StatelessWidget {
@@ -33,7 +34,16 @@ class TestCase extends StatelessWidget {
                       },
                       title: '매일 전송'),
                   _button(onTap: () {}, title: '주/월간 정송'),
-                  _button(onTap: () {}, title: '전송 취소'),
+                  _button(
+                      onTap: () async {
+                        FlutterLocalNotificationsPlugin _localNotification =
+                            FlutterLocalNotificationsPlugin();
+                        List<PendingNotificationRequest> _test =
+                            await _localNotification
+                                .pendingNotificationRequests();
+                        print(_test.length);
+                      },
+                      title: '전송 취소'),
                 ],
               ),
             ),

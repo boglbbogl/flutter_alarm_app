@@ -10,8 +10,7 @@ class TestProvider extends ChangeNotifier {
     tz.TZDateTime _now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, _now.year, _now.month,
         _now.day, _now.hour, _now.minute, _now.second);
-
-    return scheduledDate.add(const Duration(seconds: 10));
+    return scheduledDate.add(const Duration(days: 0));
   }
 
   Future<void> loopPushAlarm() async {
@@ -34,7 +33,7 @@ class TestProvider extends ChangeNotifier {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
-      matchDateTimeComponents: DateTimeComponents.time,
+      matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
   }
 
