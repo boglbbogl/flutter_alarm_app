@@ -4,16 +4,26 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class TestProvider extends ChangeNotifier {
-  tz.TZDateTime _timeZoneSetting() {
+  List<PendingNotificationRequest> notifications = [];
+  Future<tz.TZDateTime> _timeZoneSetting({
+    int duration = 0,
+  }) async {
     tz.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
     tz.TZDateTime _now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, _now.year, _now.month,
-        _now.day, _now.hour, _now.minute, _now.second);
-    return scheduledDate.add(const Duration(days: 0));
+        _now.day, _now.hour, _now.minute, _now.second + 10);
+
+    return scheduledDate.add(Duration(days: duration));
   }
 
-  Future<void> loopPushAlarm() async {
+  Future<void> unSubscripe() async {
+    FlutterLocalNotificationsPlugin _localNotification =
+        FlutterLocalNotificationsPlugin();
+    await _localNotification.cancelAll();
+  }
+
+  Future<void> loopPushAlarm(int index) async {
     FlutterLocalNotificationsPlugin _localNotification =
         FlutterLocalNotificationsPlugin();
     NotificationDetails _details = const NotificationDetails(
@@ -25,15 +35,24 @@ class TestProvider extends ChangeNotifier {
       ),
     );
     _localNotification.zonedSchedule(
-      3,
+      index == 0 ? 3 : 4,
       '로컬 푸시 알림 3',
-      '로컬 푸시 10초 마다 알림',
-      _timeZoneSetting(),
+      index == 0
+          ? '${DateTime.now().toString()} 설정_일간'
+          : '${DateTime.now().toString()} 설정_월간',
+      await _timeZoneSetting(duration: index == 0 ? 1 : 0),
       _details,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
-      matchDateTimeComponents: DateTimeComponents.dateAndTime,
+      matchDateTimeComponents: index == 0
+          ? DateTimeComponents.dateAndTime
+          : index == 1
+              ? DateTimeComponents.dayOfWeekAndTime
+              : index == 2
+                  ? DateTimeComponents.dayOfMonthAndTime
+                  : null,
+      payload: '${DateTime.now().toString()} 마다 노출되어야 함',
     );
   }
 
@@ -53,12 +72,20 @@ class TestProvider extends ChangeNotifier {
       1,
       '로컬 푸시 알림 2',
       '특정 날짜 / 시간대 전송 알림',
-      _timeZoneSetting(),
+      await _timeZoneSetting(),
       _details,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
+      payload: '한 번만 노출되고 사라짐',
     );
+  }
+
+  Future<void> checked() async {
+    FlutterLocalNotificationsPlugin _localNotification =
+        FlutterLocalNotificationsPlugin();
+    notifications = await _localNotification.pendingNotificationRequests();
+    notifyListeners();
   }
 
   Future<void> showPushAlarm() async {
@@ -75,6 +102,6 @@ class TestProvider extends ChangeNotifier {
     );
 
     await _localNotification.show(0, '로컬 푸시 알림', '로컬 푸시 알림 테스트', _details,
-        payload: 'deepLink');
+        payload: '즉시 알림 노출');
   }
 }

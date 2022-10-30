@@ -12,9 +12,9 @@ class MainProvider extends ChangeNotifier {
         const AndroidInitializationSettings('@mipmap/ic_launcher');
     DarwinInitializationSettings initSettingsIOS =
         const DarwinInitializationSettings(
-      requestSoundPermission: false,
-      requestBadgePermission: false,
-      requestAlertPermission: false,
+      requestSoundPermission: true,
+      requestBadgePermission: true,
+      requestAlertPermission: true,
     );
     InitializationSettings initSettings = InitializationSettings(
       android: initSettingsAndroid,
