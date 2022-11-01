@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_alarm_app/state/main_provider.dart';
 import 'package:flutter_alarm_app/ui/splash_screen.dart';
 import 'package:flutter_alarm_app/ui/test_case.dart';
+import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatelessWidget {
@@ -43,7 +44,24 @@ class MainScreen extends StatelessWidget {
                 ],
                 backgroundColor: const Color.fromRGBO(51, 51, 51, 1),
               ),
-              body: Text(p.test),
+              body: Column(
+                children: [
+                  Text(p.test),
+                  GestureDetector(
+                      onTap: () async {
+                        NaverLoginResult? _result =
+                            await FlutterNaverLogin.logIn();
+                        print(_result.accessToken.accessToken);
+                        print(_result.account.email);
+                      },
+                      child: Container(
+                        color: Colors.amber,
+                        width: 100,
+                        height: 30,
+                        child: const Text('naver'),
+                      ))
+                ],
+              ),
             );
           }
         },
