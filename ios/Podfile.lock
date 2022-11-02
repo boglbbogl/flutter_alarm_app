@@ -2,20 +2,33 @@ PODS:
   - Flutter (1.0.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
+  - flutter_naver_login (0.0.1):
+    - Flutter
+    - naveridlogin-sdk-ios (~> 4.1.0)
+  - naveridlogin-sdk-ios (4.1.5)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - flutter_naver_login (from `.symlinks/plugins/flutter_naver_login/ios`)
+
+SPEC REPOS:
+  trunk:
+    - naveridlogin-sdk-ios
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  flutter_naver_login:
+    :path: ".symlinks/plugins/flutter_naver_login/ios"
 
 SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
+  flutter_naver_login: 1dbf6d21aae5235cdf76a28ac79cf6871899282f
+  naveridlogin-sdk-ios: 4351fe7162cd6b8b6dbb37bd7cc205304fa1d889
 
 PODFILE CHECKSUM: 775997f741c536251164e3eacf6e34abf2eb7a17
 

@@ -12,9 +12,9 @@ class TestProvider extends ChangeNotifier {
     tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
     tz.TZDateTime _now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, _now.year, _now.month,
-        _now.day, _now.hour, _now.minute, _now.second + 10);
+        _now.day, _now.hour, _now.minute, _now.second);
 
-    return scheduledDate.add(Duration(days: duration));
+    return scheduledDate;
   }
 
   Future<void> unSubscripe() async {
@@ -34,25 +34,28 @@ class TestProvider extends ChangeNotifier {
         presentSound: true,
       ),
     );
+    tz.TZDateTime _timeZone =
+        await _timeZoneSetting(duration: index == 0 ? 1 : 0);
+    String _setting =
+        '${_timeZone.year}-${_timeZone.month}-${_timeZone.day} ${_timeZone.hour}:${_timeZone.minute}:${_timeZone.second}';
+
     _localNotification.zonedSchedule(
       index == 0 ? 3 : 4,
       '로컬 푸시 알림 3',
-      index == 0
-          ? '${DateTime.now().toString()} 설정_일간'
-          : '${DateTime.now().toString()} 설정_월간',
+      index == 0 ? '$_setting 설정_일간' : '$_setting 설정_월간',
       await _timeZoneSetting(duration: index == 0 ? 1 : 0),
       _details,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
       matchDateTimeComponents: index == 0
-          ? DateTimeComponents.dateAndTime
+          ? DateTimeComponents.time
           : index == 1
               ? DateTimeComponents.dayOfWeekAndTime
               : index == 2
                   ? DateTimeComponents.dayOfMonthAndTime
                   : null,
-      payload: '${DateTime.now().toString()} 마다 노출되어야 함',
+      payload: '$_setting 마다 노출되어야 함',
     );
   }
 
