@@ -12,6 +12,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const counterChannel = EventChannel('samples.flutter.dev/counter');
+
     return ChangeNotifierProvider<MainProvider>(
       create: (_) => MainProvider()..delayedSplash(),
       child: Consumer<MainProvider>(
@@ -19,6 +21,9 @@ class MainScreen extends StatelessWidget {
           if (p.isSplash) {
             return const SplashScreen();
           } else {
+            counterChannel.receiveBroadcastStream().listen((event) {
+              print(event);
+            });
             return Scaffold(
               backgroundColor: const Color.fromRGBO(51, 51, 51, 1),
               appBar: AppBar(
