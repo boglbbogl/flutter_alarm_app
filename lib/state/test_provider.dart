@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -26,19 +28,25 @@ class TestProvider extends ChangeNotifier {
   Future<void> loopPushAlarm(int index) async {
     FlutterLocalNotificationsPlugin _localNotification =
         FlutterLocalNotificationsPlugin();
-    NotificationDetails _details = const NotificationDetails(
-      android: AndroidNotificationDetails('alarm 3', '3번 푸시'),
+    SharedPreferences _prefer = await SharedPreferences.getInstance();
+    int? _count = _prefer.getInt('IOS_BADGE_COUNT');
+    await _prefer.setInt('IOS_BADGE_COUNT', (_count ?? 0) + 1);
+
+    NotificationDetails _details = NotificationDetails(
+      android: const AndroidNotificationDetails('alarm 3', '3번 푸시'),
       iOS: DarwinNotificationDetails(
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
+        badgeNumber: (_count ?? 0) + 1,
       ),
     );
+
     tz.TZDateTime _timeZone =
         await _timeZoneSetting(duration: index == 0 ? 1 : 0);
     String _setting =
         '${_timeZone.year}-${_timeZone.month}-${_timeZone.day} ${_timeZone.hour}:${_timeZone.minute}:${_timeZone.second}';
-
+    FlutterAppBadger.updateBadgeCount((_count ?? 0) + 1);
     _localNotification.zonedSchedule(
       index == 0 ? 3 : 4,
       '로컬 푸시 알림 3',
