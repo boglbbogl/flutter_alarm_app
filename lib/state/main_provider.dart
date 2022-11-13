@@ -4,29 +4,17 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class MainProvider extends ChangeNotifier {
   bool isSplash = true;
   String test = 'asdfdsf';
+  String test2 = 'router test';
 
-  Future<void> _initLocalNotification() async {
-    FlutterLocalNotificationsPlugin _localNotification =
-        FlutterLocalNotificationsPlugin();
-    AndroidInitializationSettings initSettingsAndroid =
-        const AndroidInitializationSettings('@mipmap/ic_launcher');
-    DarwinInitializationSettings initSettingsIOS =
-        const DarwinInitializationSettings(
-      requestSoundPermission: true,
-      requestBadgePermission: true,
-      requestAlertPermission: true,
-    );
-    InitializationSettings initSettings = InitializationSettings(
-      android: initSettingsAndroid,
-      iOS: initSettingsIOS,
-    );
-    await _localNotification.initialize(
-      initSettings,
-    );
+  void getTest(String v) {
+    test2 = v;
+    notifyListeners();
   }
 
+  void refresh() => notifyListeners();
+
   void delayedSplash() {
-    _initLocalNotification();
+    // _initLocalNotification();
     Future.delayed(const Duration(milliseconds: 2000), () {
       isSplash = false;
       notifyListeners();

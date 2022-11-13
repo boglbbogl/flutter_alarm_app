@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_alarm_app/main.dart';
 import 'package:flutter_alarm_app/state/main_provider.dart';
 import 'package:flutter_alarm_app/ui/splash_screen.dart';
 import 'package:flutter_alarm_app/ui/test_case.dart';
@@ -12,7 +13,7 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const counterChannel = EventChannel('samples.flutter.dev/counter');
+    // const counterChannel = EventChannel('samples.flutter.dev/counter');
 
     return ChangeNotifierProvider<MainProvider>(
       create: (_) => MainProvider()..delayedSplash(),
@@ -21,9 +22,9 @@ class MainScreen extends StatelessWidget {
           if (p.isSplash) {
             return const SplashScreen();
           } else {
-            counterChannel.receiveBroadcastStream().listen((event) {
-              print(event);
-            });
+            // counterChannel.receiveBroadcastStream().listen((event) {
+            //   print(event);
+            // });
             return Scaffold(
               backgroundColor: const Color.fromRGBO(51, 51, 51, 1),
               appBar: AppBar(
@@ -64,6 +65,26 @@ class MainScreen extends StatelessWidget {
                         width: 100,
                         height: 30,
                         child: const Text('naver'),
+                      )),
+                  GestureDetector(
+                      onTap: () async {
+                        p.refresh();
+                      },
+                      child: Container(
+                        color: Colors.red,
+                        width: 100,
+                        height: 30,
+                        child: Text(router),
+                      )),
+                  GestureDetector(
+                      onTap: () async {
+                        p.getTest(router);
+                      },
+                      child: Container(
+                        color: Colors.green,
+                        width: 100,
+                        height: 30,
+                        child: Text(router),
                       ))
                 ],
               ),

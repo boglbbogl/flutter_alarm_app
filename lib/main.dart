@@ -1,8 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_app/ui/main_screen.dart';
+import 'package:flutter_alarm_app/ui/show_screen.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+String router = '';
+
+@pragma('vm:entry-point')
+void notificationTapBackground(NotificationResponse notificationResponse) {
+  router = 'ok';
+}
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  _initLocalNotification();
   runApp(const MyApp());
+}
+
+Future<void> _initLocalNotification() async {
+  FlutterLocalNotificationsPlugin _localNotification =
+      FlutterLocalNotificationsPlugin();
+  AndroidInitializationSettings initSettingsAndroid =
+      const AndroidInitializationSettings('@mipmap/ic_launcher');
+  DarwinInitializationSettings initSettingsIOS =
+      const DarwinInitializationSettings(
+    requestSoundPermission: true,
+    requestBadgePermission: true,
+    requestAlertPermission: true,
+  );
+  InitializationSettings initSettings = InitializationSettings(
+    android: initSettingsAndroid,
+    iOS: initSettingsIOS,
+  );
+  await _localNotification.initialize(initSettings,
+      onDidReceiveNotificationResponse: (details) {
+    print(details.payload);
+  }, onDidReceiveBackgroundNotificationResponse: notificationTapBackground);
 }
 
 class MyApp extends StatelessWidget {
@@ -17,6 +49,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepOrange,
       ),
       home: const MainScreen(),
+      routes: {
+        "/show": (context) => ShowScreen(),
+      },
     );
   }
 }
