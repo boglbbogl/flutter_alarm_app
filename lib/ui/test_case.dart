@@ -42,6 +42,11 @@ class TestCase extends StatelessWidget {
                       },
                       title: '주/월간 정송'),
                   _button(
+                      onTap: () {
+                        value.badgeTest();
+                      },
+                      title: '배지 카운트 테스트'),
+                  _button(
                       onTap: () async {
                         value.unSubscripe();
                       },

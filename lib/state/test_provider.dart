@@ -25,6 +25,33 @@ class TestProvider extends ChangeNotifier {
     await _localNotification.cancelAll();
   }
 
+  Future<void> badgeTest() async {
+    FlutterLocalNotificationsPlugin _localNotification =
+        FlutterLocalNotificationsPlugin();
+    SharedPreferences _prefer = await SharedPreferences.getInstance();
+    int? _count = _prefer.getInt('IOS_BADGE_COUNT');
+    await _prefer.setInt('IOS_BADGE_COUNT', (_count ?? 0) + 1);
+
+    NotificationDetails _details = NotificationDetails(
+      android: const AndroidNotificationDetails('alarm 3', '3번 푸시'),
+      iOS: IOSNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+        badgeNumber: (_count ?? 0) + 1,
+      ),
+      // iOS: DarwinNotificationDetails(
+      //   presentAlert: true,
+      //   presentBadge: true,
+      //   presentSound: true,
+      //   badgeNumber: (_count ?? 0) + 1,
+      // ),
+    );
+
+    _localNotification.periodicallyShow(
+        5, 'title', 'body', RepeatInterval.everyMinute, _details);
+  }
+
   Future<void> loopPushAlarm(int index) async {
     FlutterLocalNotificationsPlugin _localNotification =
         FlutterLocalNotificationsPlugin();
@@ -34,12 +61,18 @@ class TestProvider extends ChangeNotifier {
 
     NotificationDetails _details = NotificationDetails(
       android: const AndroidNotificationDetails('alarm 3', '3번 푸시'),
-      iOS: DarwinNotificationDetails(
+      iOS: IOSNotificationDetails(
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
         badgeNumber: (_count ?? 0) + 1,
       ),
+      // iOS: DarwinNotificationDetails(
+      //   presentAlert: true,
+      //   presentBadge: true,
+      //   presentSound: true,
+      //   badgeNumber: (_count ?? 0) + 1,
+      // ),
     );
 
     tz.TZDateTime _timeZone =
@@ -73,7 +106,7 @@ class TestProvider extends ChangeNotifier {
 
     NotificationDetails _details = const NotificationDetails(
       android: AndroidNotificationDetails('alarm 2', '2번 푸시'),
-      iOS: DarwinNotificationDetails(
+      iOS: IOSNotificationDetails(
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
@@ -105,7 +138,7 @@ class TestProvider extends ChangeNotifier {
 
     NotificationDetails _details = const NotificationDetails(
       android: AndroidNotificationDetails('alarm 1', '1번 푸시'),
-      iOS: DarwinNotificationDetails(
+      iOS: IOSNotificationDetails(
         presentAlert: true,
         presentBadge: true,
         presentSound: true,

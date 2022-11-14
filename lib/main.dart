@@ -5,10 +5,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 String router = '';
 
-@pragma('vm:entry-point')
-void notificationTapBackground(NotificationResponse notificationResponse) {
-  router = 'ok';
-}
+// @pragma('vm:entry-point')
+// // void notificationTapBackground(NotificationResponse notificationResponse) {
+//   router = 'ok';
+// }
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,20 +21,22 @@ Future<void> _initLocalNotification() async {
       FlutterLocalNotificationsPlugin();
   AndroidInitializationSettings initSettingsAndroid =
       const AndroidInitializationSettings('@mipmap/ic_launcher');
-  DarwinInitializationSettings initSettingsIOS =
-      const DarwinInitializationSettings(
+  IOSInitializationSettings initSettingsIOS = const IOSInitializationSettings(
     requestSoundPermission: true,
     requestBadgePermission: true,
     requestAlertPermission: true,
   );
+
   InitializationSettings initSettings = InitializationSettings(
     android: initSettingsAndroid,
     iOS: initSettingsIOS,
   );
-  await _localNotification.initialize(initSettings,
-      onDidReceiveNotificationResponse: (details) {
-    print(details.payload);
-  }, onDidReceiveBackgroundNotificationResponse: notificationTapBackground);
+  await _localNotification.initialize(
+    initSettings,
+    onSelectNotification: (v) {
+      router = 'adskljflsadjflasd';
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {
