@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as zone;
+import 'package:timezone/timezone.dart' as zone;
 
 // [Android-only] This "Headless Task" is run when the Android app is terminated with `enableHeadless: true`
 // Be sure to annotate your callback function to avoid issues in release mode on Flutter >= 3.3.0
@@ -69,13 +71,17 @@ class _MyAppState extends State<MyApp> {
 
   notiInit() {
     FlutterLocalNotificationsPlugin _noti = FlutterLocalNotificationsPlugin();
+    AndroidInitializationSettings _aos =
+        AndroidInitializationSettings('@mipmap/launcher_icon');
+
     IOSInitializationSettings _ios = IOSInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
-    InitializationSettings _setting = InitializationSettings(iOS: _ios);
-    _noti.initialize(_setting);
+    InitializationSettings _setting =
+        InitializationSettings(iOS: _ios, android: _aos);
+    // _noti.initialize(_setting);
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -91,17 +97,13 @@ class _MyAppState extends State<MyApp> {
             requiresStorageNotLow: false,
             requiresDeviceIdle: false,
             requiredNetworkType: NetworkType.NONE), (String taskId) async {
-      // <-- Event handler
-      // This is the fetch-event callback.
       FlutterAppBadger.updateBadgeCount(444);
-
       SharedPreferences? pre = await SharedPreferences.getInstance();
       List<String> save = [];
       List<String>? _test = pre.getStringList('BACKGROUND');
       if (_test != null) {
         save = _test;
       }
-
       save.add("[BackgroundFetch] BACK - SUCCESS :: $taskId");
       await pre.setStringList('BACKGROUND', save);
       print("[BackgroundFetch] Event received $taskId");
@@ -164,11 +166,20 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  Future<zone.TZDateTime> _timeZone(int index) async {
+    zone.initializeTimeZones();
+    zone.setLocalLocation(zone.getLocation('Asia/Seoul'));
+    zone.TZDateTime _now = zone.TZDateTime.now(zone.local);
+    zone.TZDateTime _schedule = zone.TZDateTime(zone.local, _now.year,
+        _now.month, _now.day, _now.hour, 50 + index, _now.second);
+    return _schedule;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: new Scaffold(
-        appBar: new AppBar(
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
             title: const Text('BackgroundFetch Example',
                 style: TextStyle(color: Colors.black)),
             backgroundColor: Colors.amberAccent,
@@ -186,7 +197,7 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () async {
                     SharedPreferences? _pre =
                         await SharedPreferences.getInstance();
-                    showList = await _pre.getStringList('BACKGROUND');
+                    showList = _pre.getStringList('BACKGROUND');
                     print(showList);
                     if (showList == null) {
                       showList = [];
@@ -199,6 +210,67 @@ class _MyAppState extends State<MyApp> {
           child: ListView(
             shrinkWrap: true,
             children: [
+              GestureDetector(
+                  onTap: () async {
+                    // zone.TZDateTime _schedule = await _timeZone(1);
+                    // List<zone.TZDateTime> _list = [];
+                    FlutterLocalNotificationsPlugin _local =
+                        FlutterLocalNotificationsPlugin();
+                    AndroidNotificationDetails _aos =
+                        AndroidNotificationDetails('출석체크 루프', '출석체크 루프');
+                    IOSNotificationDetails _ios = IOSNotificationDetails(
+                      presentAlert: true,
+                      presentBadge: true,
+                      presentSound: true,
+                    );
+                    for (int i = 0; i < 100; i++) {
+                      zone.TZDateTime _test = await _timeZone(i + 1);
+                      int _id = int.parse(
+                          "${_test.year.toString().substring(2, 4)}${_test.month}${_test.day}${_test.hour}${_test.minute}");
+                      // _list.add(_schedule.add(Duration(minutes: i)));
+                      _local.zonedSchedule(
+                        _id,
+                        '$_id',
+                        '$_id',
+                        await _timeZone(i + 1),
+                        NotificationDetails(android: _aos, iOS: _ios),
+                        androidAllowWhileIdle: true,
+                        uiLocalNotificationDateInterpretation:
+                            UILocalNotificationDateInterpretation.absoluteTime,
+                      );
+                    }
+
+                    // for (final e in _list) {
+                    //   print(e);
+                    //   int _test = int.parse(
+                    //       "${e.year}${e.month}${e.day}${e.hour}${e.minute}");
+                    //   print(_test);
+
+                    // }
+                  },
+                  child: Container(
+                      width: 100,
+                      height: 100,
+                      child: Center(child: Text('NOTI')))),
+              const SizedBox(height: 50),
+              GestureDetector(
+                  onTap: () async {
+                    // FlutterAppBadger.updateBadgeCount(0);
+                    FlutterLocalNotificationsPlugin _local =
+                        FlutterLocalNotificationsPlugin();
+                    List<PendingNotificationRequest> _list =
+                        await _local.pendingNotificationRequests();
+                    for (final e in _list) {
+                      print(e.id);
+                    }
+                  },
+                  child: Text('LIST')),
+              const SizedBox(height: 50),
+              GestureDetector(
+                  onTap: () {
+                    FlutterAppBadger.updateBadgeCount(0);
+                  },
+                  child: Text('RESET')),
               if (showList != null) ...[...showList!.map((e) => Text(e))],
               ...List.generate(_events.length, (index) {
                 DateTime timestamp = _events[index];
