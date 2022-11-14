@@ -30,7 +30,7 @@ class MainProvider extends ChangeNotifier {
 
     if (details!.didNotificationLaunchApp) {
       if (details.payload != null) {
-        router = '13413242341234123412341';
+        // router = '13413242341234123412341';
       }
     }
   }

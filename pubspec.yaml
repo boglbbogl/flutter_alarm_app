@@ -39,6 +39,7 @@ dependencies:
   flutter_naver_login: ^1.6.0
   flutter_app_badger: ^1.5.0
   shared_preferences: ^2.0.15
+  background_fetch: ^1.1.2
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,4 @@
+import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,18 +75,26 @@ class MainScreen extends StatelessWidget {
                         color: Colors.red,
                         width: 100,
                         height: 30,
-                        child: Text(router),
+                        child: Text('router'),
                       )),
                   GestureDetector(
                       onTap: () async {
-                        p.getTest(router);
+                        p.getTest('router');
                       },
                       child: Container(
                         color: Colors.green,
                         width: 100,
                         height: 30,
-                        child: Text(router),
-                      ))
+                        child: Text('router'),
+                      )),
+                  GestureDetector(
+                      onTap: () async {},
+                      child: Container(
+                        color: Colors.purple,
+                        width: 100,
+                        height: 30,
+                        child: Text('router'),
+                      )),
                 ],
               ),
             );
