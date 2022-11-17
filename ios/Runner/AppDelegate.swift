@@ -9,19 +9,47 @@ import Foundation
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-
+    
     if #available(iOS 10.0, *) {
           UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }
-    let factory = GyeomFactory()
-    self.registrar(forPlugin: "GyeomPlugin")?.register(factory, withId: "gyeom-type")
+
+    let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+    let randomNumberChannel = FlutterEventChannel(name: "random_number_channel", binaryMessenger: controller.binaryMessenger)
+    let randomNumberStreamHandler = RandomNumberStreamHandler()
+
+    randomNumberChannel.setStreamHandler(randomNumberStreamHandler)
+    // let factory = GyeomFactory()
+    // self.registrar(forPlugin: "GyeomPlugin")?.register(factory, withId: "gyeom-type")
 
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
 
-
+class RandomNumberStreamHandler: NSObject, FlutterStreamHandler{
+    var sink: FlutterEventSink?
+    var timer: Timer?
+    
+    func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+        sink = events
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(sendNewRandomNumber), userInfo: nil, repeats: true)
+        return nil
+    }
+    
+    @objc func sendNewRandomNumber() {
+        guard let sink = sink else { return }
+        
+        let randomNumber = Int.random(in: 1..<10)
+        sink(randomNumber)
+    }
+    
+    func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        sink = nil
+        timer?.invalidate()
+        return nil
+    }
+}
 
 /**
  FlutterPlatformViewFactory를 상속받는 클래스 : FlutterPlatformView를 상속받아 UIView를 리턴하는 그 클래스를 연결하는 클래스(create()가 프로토콜내 필수 구현함수로 등록되어 있다, createArgsCodec()는 optional)

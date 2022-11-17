@@ -1,11 +1,8 @@
-import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_alarm_app/main.dart';
 import 'package:flutter_alarm_app/state/main_provider.dart';
 import 'package:flutter_alarm_app/ui/splash_screen.dart';
-import 'package:flutter_alarm_app/ui/swift_native_view.dart';
 import 'package:flutter_alarm_app/ui/test_case.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:provider/provider.dart';
@@ -16,11 +13,15 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // const counterChannel = EventChannel('samples.flutter.dev/counter');
+    const EventChannel _channel = EventChannel('random_number_channel');
 
     return ChangeNotifierProvider<MainProvider>(
       create: (_) => MainProvider()..delayedSplash(),
       child: Consumer<MainProvider>(
         builder: (context, p, child) {
+          _channel.receiveBroadcastStream().listen((event) {
+            print(event);
+          });
           if (p.isSplash) {
             return const SplashScreen();
           } else {
@@ -97,10 +98,7 @@ class MainScreen extends StatelessWidget {
                         child: Text('router'),
                       )),
                   GestureDetector(
-                      onTap: () async {
-                        Navigator.of(context).push(CupertinoPageRoute(
-                            builder: ((context) => SwiftNativeView())));
-                      },
+                      onTap: () async {},
                       child: Container(
                         color: Colors.purple,
                         width: 100,
