@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_alarm_app/main.dart';
 import 'package:flutter_alarm_app/state/main_provider.dart';
 import 'package:flutter_alarm_app/ui/splash_screen.dart';
+import 'package:flutter_alarm_app/ui/swift_native_view.dart';
 import 'package:flutter_alarm_app/ui/test_case.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:provider/provider.dart';
@@ -94,6 +95,17 @@ class MainScreen extends StatelessWidget {
                         width: 100,
                         height: 30,
                         child: Text('router'),
+                      )),
+                  GestureDetector(
+                      onTap: () async {
+                        Navigator.of(context).push(CupertinoPageRoute(
+                            builder: ((context) => SwiftNativeView())));
+                      },
+                      child: Container(
+                        color: Colors.purple,
+                        width: 100,
+                        height: 30,
+                        child: Text('NATIVE VIEW'),
                       )),
                 ],
               ),

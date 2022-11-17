@@ -2,6 +2,7 @@ import 'package:background_fetch/background_fetch.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_alarm_app/ui/main_screen.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -178,125 +179,126 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-            title: const Text('BackgroundFetch Example',
-                style: TextStyle(color: Colors.black)),
-            backgroundColor: Colors.amberAccent,
-            brightness: Brightness.light,
-            leading: IconButton(
-                onPressed: () {
-                  setState(() {
-                    showList = showList;
-                  });
-                },
-                icon: Icon(Icons.remove)),
-            actions: <Widget>[
-              Switch(value: _enabled, onChanged: _onClickEnable),
-              IconButton(
-                  onPressed: () async {
-                    SharedPreferences? _pre =
-                        await SharedPreferences.getInstance();
-                    showList = _pre.getStringList('BACKGROUND');
-                    print(showList);
-                    if (showList == null) {
-                      showList = [];
-                    }
-                  },
-                  icon: Icon(Icons.abc)),
-            ]),
-        body: Container(
-          color: Colors.pink.shade100,
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              GestureDetector(
-                  onTap: () async {
-                    // zone.TZDateTime _schedule = await _timeZone(1);
-                    // List<zone.TZDateTime> _list = [];
-                    FlutterLocalNotificationsPlugin _local =
-                        FlutterLocalNotificationsPlugin();
-                    AndroidNotificationDetails _aos =
-                        AndroidNotificationDetails('출석체크 루프', '출석체크 루프');
-                    IOSNotificationDetails _ios = IOSNotificationDetails(
-                      presentAlert: true,
-                      presentBadge: true,
-                      presentSound: true,
-                    );
-                    for (int i = 0; i < 100; i++) {
-                      zone.TZDateTime _test = await _timeZone(i + 1);
-                      int _id = int.parse(
-                          "${_test.year.toString().substring(2, 4)}${_test.month}${_test.day}${_test.hour}${_test.minute}");
-                      // _list.add(_schedule.add(Duration(minutes: i)));
-                      _local.zonedSchedule(
-                        _id,
-                        '$_id',
-                        '$_id',
-                        await _timeZone(i + 1),
-                        NotificationDetails(android: _aos, iOS: _ios),
-                        androidAllowWhileIdle: true,
-                        uiLocalNotificationDateInterpretation:
-                            UILocalNotificationDateInterpretation.absoluteTime,
-                      );
-                    }
+      home: MainScreen(),
+      // home: Scaffold(
+      //   appBar: AppBar(
+      //       title: const Text('BackgroundFetch Example',
+      //           style: TextStyle(color: Colors.black)),
+      //       backgroundColor: Colors.amberAccent,
+      //       brightness: Brightness.light,
+      //       leading: IconButton(
+      //           onPressed: () {
+      //             setState(() {
+      //               showList = showList;
+      //             });
+      //           },
+      //           icon: Icon(Icons.remove)),
+      //       actions: <Widget>[
+      //         Switch(value: _enabled, onChanged: _onClickEnable),
+      //         IconButton(
+      //             onPressed: () async {
+      //               SharedPreferences? _pre =
+      //                   await SharedPreferences.getInstance();
+      //               showList = _pre.getStringList('BACKGROUND');
+      //               print(showList);
+      //               if (showList == null) {
+      //                 showList = [];
+      //               }
+      //             },
+      //             icon: Icon(Icons.abc)),
+      //       ]),
+      //   body: Container(
+      //     color: Colors.pink.shade100,
+      //     child: ListView(
+      //       shrinkWrap: true,
+      //       children: [
+      //         GestureDetector(
+      //             onTap: () async {
+      //               // zone.TZDateTime _schedule = await _timeZone(1);
+      //               // List<zone.TZDateTime> _list = [];
+      //               FlutterLocalNotificationsPlugin _local =
+      //                   FlutterLocalNotificationsPlugin();
+      //               AndroidNotificationDetails _aos =
+      //                   AndroidNotificationDetails('출석체크 루프', '출석체크 루프');
+      //               IOSNotificationDetails _ios = IOSNotificationDetails(
+      //                 presentAlert: true,
+      //                 presentBadge: true,
+      //                 presentSound: true,
+      //               );
+      //               for (int i = 0; i < 100; i++) {
+      //                 zone.TZDateTime _test = await _timeZone(i + 1);
+      //                 int _id = int.parse(
+      //                     "${_test.year.toString().substring(2, 4)}${_test.month}${_test.day}${_test.hour}${_test.minute}");
+      //                 // _list.add(_schedule.add(Duration(minutes: i)));
+      //                 _local.zonedSchedule(
+      //                   _id,
+      //                   '$_id',
+      //                   '$_id',
+      //                   await _timeZone(i + 1),
+      //                   NotificationDetails(android: _aos, iOS: _ios),
+      //                   androidAllowWhileIdle: true,
+      //                   uiLocalNotificationDateInterpretation:
+      //                       UILocalNotificationDateInterpretation.absoluteTime,
+      //                 );
+      //               }
 
-                    // for (final e in _list) {
-                    //   print(e);
-                    //   int _test = int.parse(
-                    //       "${e.year}${e.month}${e.day}${e.hour}${e.minute}");
-                    //   print(_test);
+      //               // for (final e in _list) {
+      //               //   print(e);
+      //               //   int _test = int.parse(
+      //               //       "${e.year}${e.month}${e.day}${e.hour}${e.minute}");
+      //               //   print(_test);
 
-                    // }
-                  },
-                  child: Container(
-                      width: 100,
-                      height: 100,
-                      child: Center(child: Text('NOTI')))),
-              const SizedBox(height: 50),
-              GestureDetector(
-                  onTap: () async {
-                    // FlutterAppBadger.updateBadgeCount(0);
-                    FlutterLocalNotificationsPlugin _local =
-                        FlutterLocalNotificationsPlugin();
-                    List<PendingNotificationRequest> _list =
-                        await _local.pendingNotificationRequests();
-                    for (final e in _list) {
-                      print(e.id);
-                    }
-                  },
-                  child: Text('LIST')),
-              const SizedBox(height: 50),
-              GestureDetector(
-                  onTap: () {
-                    FlutterAppBadger.updateBadgeCount(0);
-                  },
-                  child: Text('RESET')),
-              if (showList != null) ...[...showList!.map((e) => Text(e))],
-              ...List.generate(_events.length, (index) {
-                DateTime timestamp = _events[index];
-                return Container(
-                  child: InputDecorator(
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(
-                              left: 10.0, top: 10.0, bottom: 0.0),
-                          labelStyle: TextStyle(
-                              color: Colors.amberAccent, fontSize: 20.0),
-                          labelText: "[background fetch event]"),
-                      child: new Text(timestamp.toString(),
-                          style:
-                              TextStyle(color: Colors.white, fontSize: 16.0))),
-                );
-              }),
-            ],
-          ),
-        ),
-        bottomNavigationBar: BottomAppBar(
-            child: Row(children: <Widget>[
-          RaisedButton(onPressed: _onClickStatus, child: Text('Status')),
-          Container(
-              child: Text("$_status"), margin: EdgeInsets.only(left: 20.0))
-        ])),
-      ),
+      //               // }
+      //             },
+      //             child: Container(
+      //                 width: 100,
+      //                 height: 100,
+      //                 child: Center(child: Text('NOTI')))),
+      //         const SizedBox(height: 50),
+      //         GestureDetector(
+      //             onTap: () async {
+      //               // FlutterAppBadger.updateBadgeCount(0);
+      //               FlutterLocalNotificationsPlugin _local =
+      //                   FlutterLocalNotificationsPlugin();
+      //               List<PendingNotificationRequest> _list =
+      //                   await _local.pendingNotificationRequests();
+      //               for (final e in _list) {
+      //                 print(e.id);
+      //               }
+      //             },
+      //             child: Text('LIST')),
+      //         const SizedBox(height: 50),
+      //         GestureDetector(
+      //             onTap: () {
+      //               FlutterAppBadger.updateBadgeCount(0);
+      //             },
+      //             child: Text('RESET')),
+      //         if (showList != null) ...[...showList!.map((e) => Text(e))],
+      //         ...List.generate(_events.length, (index) {
+      //           DateTime timestamp = _events[index];
+      //           return Container(
+      //             child: InputDecorator(
+      //                 decoration: InputDecoration(
+      //                     contentPadding: EdgeInsets.only(
+      //                         left: 10.0, top: 10.0, bottom: 0.0),
+      //                     labelStyle: TextStyle(
+      //                         color: Colors.amberAccent, fontSize: 20.0),
+      //                     labelText: "[background fetch event]"),
+      //                 child: new Text(timestamp.toString(),
+      //                     style:
+      //                         TextStyle(color: Colors.white, fontSize: 16.0))),
+      //           );
+      //         }),
+      //       ],
+      //     ),
+      //   ),
+      //   bottomNavigationBar: BottomAppBar(
+      //       child: Row(children: <Widget>[
+      //     RaisedButton(onPressed: _onClickStatus, child: Text('Status')),
+      //     Container(
+      //         child: Text("$_status"), margin: EdgeInsets.only(left: 20.0))
+      //   ])),
+      // ),
     );
   }
 }
