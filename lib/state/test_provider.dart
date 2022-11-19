@@ -14,7 +14,7 @@ class TestProvider extends ChangeNotifier {
     tz.setLocalLocation(tz.getLocation('Asia/Seoul'));
     tz.TZDateTime _now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, _now.year, _now.month,
-        _now.day, _now.hour, _now.minute, _now.second - 1);
+        _now.day, _now.hour, _now.minute, _now.second + 10);
 
     return scheduledDate;
   }

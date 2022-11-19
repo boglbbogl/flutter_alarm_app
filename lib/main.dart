@@ -176,8 +176,15 @@ class _MyAppState extends State<MyApp> {
     return _schedule;
   }
 
+  final EventChannel _notificationStreamWithTerminated =
+      EventChannel("example/notification");
+
   @override
   Widget build(BuildContext context) {
+    _notificationStreamWithTerminated.receiveBroadcastStream().listen((event) {
+      print(event);
+    });
+
     return MaterialApp(
       home: MainScreen(),
       // home: Scaffold(

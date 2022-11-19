@@ -19,9 +19,9 @@ class MainScreen extends StatelessWidget {
       create: (_) => MainProvider()..delayedSplash(),
       child: Consumer<MainProvider>(
         builder: (context, p, child) {
-          _channel.receiveBroadcastStream().listen((event) {
-            print(event);
-          });
+          // _channel.receiveBroadcastStream().listen((event) {
+          //   print(event);
+          // });
           if (p.isSplash) {
             return const SplashScreen();
           } else {
