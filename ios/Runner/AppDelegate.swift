@@ -22,7 +22,7 @@ import UserNotifications
     let randomNumberStreamHandler = RandomNumberStreamHandler()
 
     randomNumberChannel.setStreamHandler(randomNumberStreamHandler)
-    let factory = GyeomFactory()
+    let factory = TestFactory()
     self.registrar(forPlugin: "GyeomPlugin")?.register(factory, withId: "gyeom-type")
 
     GeneratedPluginRegistrant.register(with: self)
@@ -54,8 +54,8 @@ class RandomNumberStreamHandler: NSObject, FlutterStreamHandler{
     }
 }
 
-class GyeomFactory: NSObject, FlutterPlatformViewFactory{
-    private var gyeomView: GyeomView?
+class TestFactory: NSObject, FlutterPlatformViewFactory{
+    private var testView: TestView?
     private var messenger: FlutterBinaryMessenger?
     
     override init(){
@@ -69,12 +69,12 @@ class GyeomFactory: NSObject, FlutterPlatformViewFactory{
 
     func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
         
-        self.gyeomView = GyeomView(
+        self.testView = TestView(
             frame: frame,
             viewIdentifier: viewId,
             arguments: args,
             binaryMessenger: messenger)
-        return gyeomView ?? GyeomView(
+        return testView ?? TestView(
             frame: frame,
             viewIdentifier: viewId,
             arguments: args,
@@ -82,7 +82,7 @@ class GyeomFactory: NSObject, FlutterPlatformViewFactory{
     }
 }
 
-class GyeomView: NSObject, FlutterPlatformView{
+class TestView: NSObject, FlutterPlatformView{
     private var returnView: UIView?
     var nativeLabel = UILabel()
     
@@ -108,7 +108,7 @@ class GyeomView: NSObject, FlutterPlatformView{
     
     func createNativeView(view _view: UIView, args: Any?){
         _view.backgroundColor = UIColor.blue
-        nativeLabel.text = "이것은 GyeomView"
+        nativeLabel.text = "이것은 TestView"
         nativeLabel.textColor = UIColor.white
         nativeLabel.textAlignment = .center
         nativeLabel.frame = CGRect(x: 0, y: 0, width: 180, height: 48.0)
